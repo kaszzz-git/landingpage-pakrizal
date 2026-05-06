@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ultimate Portfolio - Azka Bima Pradana</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
+body{background:#0b1a2f;color:#fff;overflow-x:hidden}
+
+header{
+position:fixed;width:100%;top:0;z-index:1000;
+background:rgba(0,0,0,0.3);backdrop-filter:blur(10px);
+padding:15px 40px;display:flex;justify-content:space-between;align-items:center
+}
+
+nav a{color:#fff;margin-left:20px;text-decoration:none;position:relative}
+nav a::after{content:'';position:absolute;width:0;height:2px;background:#00e5ff;bottom:-5px;left:0;transition:.3s}
+nav a:hover::after{width:100%}
+
+.hero{height:100vh;display:flex;justify-content:center;align-items:center;flex-direction:column;text-align:center;position:relative}
+
+canvas{position:absolute;top:0;left:0;width:100%;height:100%;z-index:0}
+.hero-content{z-index:1}
+
+.hero h1{font-size:55px;background:linear-gradient(90deg,#00e5ff,#2196f3);-webkit-background-clip:text;color:transparent}
+
+.glow-btn{
+margin-top:20px;padding:12px 30px;border-radius:30px;border:none;
+background:#00e5ff;color:#000;cursor:pointer;font-weight:bold;
+box-shadow:0 0 15px #00e5ff;transition:.3s
+}
+.glow-btn:hover{transform:scale(1.1);box-shadow:0 0 30px #00e5ff}
+
+section{padding:100px 40px;text-align:center}
+
+.card{
+background:rgba(255,255,255,0.05);
+padding:25px;border-radius:20px;
+backdrop-filter:blur(10px);
+box-shadow:0 10px 30px rgba(0,0,0,0.5);
+transition:.4s;transform-style:preserve-3d
+}
+.card:hover{transform:rotateY(15deg) scale(1.05)}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:25px}
+
+.hidden{opacity:0;transform:translateY(50px);transition:1s}
+.show{opacity:1;transform:translateY(0)}
+
+.cursor{
+width:20px;height:20px;border-radius:50%;
+background:#00e5ff;position:fixed;pointer-events:none;
+transform:translate(-50%,-50%);box-shadow:0 0 20px #00e5ff;z-index:2000
+}
+
+footer{background:#111;padding:20px}
+</style>
+</head>
+
+<body>
+<div class="cursor" id="cursor"></div>
+
+<header>
+  <h1>Azka Bima</h1>
+  <nav>
+    <a href="#">Home</a>
+    <a href="#about">About</a>
+    <a href="#skills">Skills</a>
+    <a href="#projects">Projects</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+
+<section class="hero">
+<canvas id="bg"></canvas>
+<div class="hero-content">
+<h1>AZKA BIMA PRADANA</h1>
+<p id="typing"></p>
+<button class="glow-btn" onclick="scrollToSection('projects')">🚀 Explore</button>
+</div>
+</section>
+
+<section id="about" class="hidden">
+<h2>Tentang Saya</h2>
+<p>Pelajar yang fokus pada teknologi, web development, dan IoT.</p>
+</section>
+
+<section id="projects" class="hidden">
+<h2>Projects</h2>
+<div class="grid">
+<div class="card">🌐 Website Modern</div>
+<div class="card">📟 ESP32 OLED</div>
+<div class="card">🎨 UI Design</div>
+</div>
+</section>
+
+<footer>
+<p>© 2026 Azka Bima Pradana</p>
+</footer>
+
+<script>
+function scrollToSection(id){document.getElementById(id).scrollIntoView({behavior:'smooth'})}
+
+// typing
+const words=["Web Developer","IoT Enthusiast","Creative Thinker"]
+let i=0,j=0,del=false
+function type(){
+let w=words[i]
+document.getElementById('typing').textContent=w.substring(0,j)
+if(!del&&j<w.length){j++;setTimeout(type,80)}
+else if(del&&j>0){j--;setTimeout(type,40)}
+else{del=!del;if(!del)i=(i+1)%words.length;setTimeout(type,700)}}
+type()
+
+// scroll reveal
+const els=document.querySelectorAll('.hidden')
+window.addEventListener('scroll',()=>{
+els.forEach(el=>{
+if(el.getBoundingClientRect().top<window.innerHeight-100){el.classList.add('show')}
+})})
+
+// cursor glow
+const cursor=document.getElementById('cursor')
+document.addEventListener('mousemove',e=>{
+cursor.style.left=e.clientX+'px'
+cursor.style.top=e.clientY+'px'
+})
+
+// particles
+const canvas=document.getElementById('bg')
+const ctx=canvas.getContext('2d')
+canvas.width=window.innerWidth
+canvas.height=window.innerHeight
+
+let p=[]
+for(let i=0;i<100;i++){p.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*2})}
+
+function anim(){
+ctx.clearRect(0,0,canvas.width,canvas.height)
+p.forEach(a=>{
+a.y+=0.5
+if(a.y>canvas.height)a.y=0
+ctx.beginPath()
+ctx.arc(a.x,a.y,a.r,0,Math.PI*2)
+ctx.fillStyle='#00e5ff'
+ctx.fill()
+})
+requestAnimationFrame(anim)
+}
+anim()
+
+// resize
+window.onresize=()=>{
+canvas.width=window.innerWidth
+canvas.height=window.innerHeight
+}
+</script>
+
+</body>
+</html>
